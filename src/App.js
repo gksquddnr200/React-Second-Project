@@ -31,10 +31,16 @@ class App extends Component {
         <div className="App">
           <Subject 
           title= {this.state.subject.title} 
-          sub= {this.state.subject.sub}>            
+          sub= {this.state.subject.sub}
+          onChangePage = {function(){
+            this.setState({mode: 'welcome'})
+          }.bind(this)}
+          >            
           </Subject>
-          <Subject title="React" sub="For UI"></Subject>
-          <TOC data={this.state.contents}></TOC>
+          <TOC onChangePage ={function(){
+            this.setState({mode: 'read'});            
+          }.bind(this)}
+          data={this.state.contents}></TOC>
           <Content title={_title} desc={_desc}></Content>
         </div>
       );
