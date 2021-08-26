@@ -1,14 +1,17 @@
 import './App.css';
 import React, {Component, Fragment} from 'react';
 import TOC from "./components/TOC";
-import Content from "./components/Contents";
+import ReadContent from "./components/ReadContents";
 import Subject from "./components/Subject";
+import Control from "./components/Control"
+import CreateContent from './components/CreateContent';
 
 class App extends Component {
   constructor(props){
     super(props);
+    this.max_content_id = 3;
     this.state = {
-      mode: 'read',
+      mode: 'Create',
       subject: {title:'web', sub: 'world Wide WEB!'},
       welcome: {title: 'welcome', desc: 'Hello, React!!'},
       contents: [
@@ -19,14 +22,39 @@ class App extends Component {
     }
   }
   render(){
-    var _title, _desc = null;
+    var _title, _desc, _article = null;
     if(this.state.mode === 'welcome'){
       _title = this.state.welcome.title;
       _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
     }else if(this.state.mode === 'read'){
-      _title = this.state.contents[0].title;
-      _desc = this.state.contents[0].desc; 
+      var i = 0;
+      while(i<this.state.contents.length){
+        var data = this.state.contents[i];
+        if (data.id === this.state.selected_content_id){
+          _title = data.title;
+          _desc = data.desc;
+          break;
+        }
+        i = i + 1;
+      }
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>
+    }else if (this.state.mode === 'create'){
+      _article = <CreateContent onSubmit={function(_title,_desc){
+        this.max_content_id = this.max_content_id+1;
+        // this.state.contents.push({
+        //   id: this.max_content_id, title: _title, desc: _desc
+        // });
+        var _contents=this.state.contents.concat({
+           id: this.max_content_id, title: _title, desc: _desc
+         }
+        )
+        this.setState({
+          contents: _contents
+        });
+      }.bind(this)}></CreateContent>
     }
+
     return (
         <div className="App">
           <Subject 
@@ -37,11 +65,21 @@ class App extends Component {
           }.bind(this)}
           >            
           </Subject>
-          <TOC onChangePage ={function(){
-            this.setState({mode: 'read'});            
+
+          <TOC onChangePage ={function(id){
+            this.setState({
+              mode: 'read',
+            selected_content_id:Number(id)
+          });    
           }.bind(this)}
           data={this.state.contents}></TOC>
-          <Content title={_title} desc={_desc}></Content>
+
+          <Control onChangeMode={function(_mode){
+            this.setState({
+              mode:_mode
+            });
+          }.bind(this)}></Control>
+          {_article}
         </div>
       );
     }
