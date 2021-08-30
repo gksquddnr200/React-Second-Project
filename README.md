@@ -1,4 +1,4 @@
-## 본 프로젝트는 생활코딩에서 배우는 React 프로젝트입니다 
+## 본 프로젝트는 생활코딩에서 배우는 React 프로젝트입니다 CRUD
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
